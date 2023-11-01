@@ -1,0 +1,67 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/connieleighton/BlueCrossRoster/HelloWorld.csproj": {}
+  },
+  "projects": {
+    "/Users/connieleighton/BlueCrossRoster/HelloWorld.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/connieleighton/BlueCrossRoster/HelloWorld.csproj",
+        "projectName": "HelloWorld",
+        "projectPath": "/Users/connieleighton/BlueCrossRoster/HelloWorld.csproj",
+        "packagesPath": "/Users/connieleighton/.nuget/packages/",
+        "outputPath": "/Users/connieleighton/BlueCrossRoster/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/connieleighton/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "EPPlus": {
+              "target": "Package",
+              "version": "[6.2.9, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.400/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

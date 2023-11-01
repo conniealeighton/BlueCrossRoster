@@ -1,0 +1,408 @@
+---
+home_and_environment:
+  templates:
+    Alerts:
+      title: Alert Stickers
+      button: Alert Stickers
+      body: "# Please Place Alert Sticker Here."
+    Allergies:
+      title: Allergies
+      button: Allergies
+      body: "# Alert sticker MUST be used for all known drug allergies"
+    Alert:
+      title: Alerts
+      button: Alerts
+      body: |-
+       # Please respond to each alert 'Yes' or 'No'
+
+       - Advance Health Directive (AHD) (Yes / No )
+       - Enduring Power of Attorney (Yes / No)
+       - Not for Resuscitation (Yes / No )
+       - Dementia Supplement (Yes / No )
+       - High Falls Risk (Yes / No )
+       - Lives alone (Yes / No )
+       - English as a Second Language (ESL) (Yes / No )
+       - Interpreter required (Yes / No )
+       - History of seizures  (Yes / No )
+       - Choking risk (Yes / No )
+who_i_am:
+  templates:
+    background:
+      title: Background
+      button: Background
+      body: |-
+       # Please Input Member Information
+
+       - Key Contact Information
+       - Client Name
+       - Preferred Name
+       - DOB
+       - Address
+       - HCP Level
+medical_history:
+  templates:
+    observations:
+      title: Observations/Assessment Tools Required
+      button: Observations/Assessment Tools Required
+      body: |-
+        # Description
+        - Consider observations and frequency, weight, blood, glucose monitoring, urinalysis, cognitive assessments, full neurological observations, neurovascular observations
+    Comorbidities:
+      title: Co-morbidities
+      button: Co-morbidities
+      body: |-
+        # Description
+        - Include any management plans required ie Diabetes Management Plan
+    Cognition_Screening:
+      title: Cognition Risk Screening
+      button: Cognition Risk Screening
+      body: |-
+        # Description
+        - Consider Standardised Mini-Mental State Examination or a Rowland Universal Dementia Assessment Scale risk assessment. 
+        - Consider Glasgow coma scale, history of cognitive impairment, confusion, behavior, loss of memory, poor motor coordination, and delirium risk.
+    Communication_Needs:
+      title: Communication Needs
+      button: Communication Needs
+      body: |-
+        # Description
+        - Consider clients from Culturally and Linguistically Diverse Backgrounds (CALD), interpreter requirements, sensory and perception needs, visual and hearing impairments
+    FALLS_RISK_SCREENING:
+      title: Falls Risk Screening
+      button: Falls Risk Screening
+      body: |-
+        # Description
+        - Complete Falls Risk Assessment Tool (FRAT) upon admission, post-fall, or as required with medical or cognitive condition change. See Initial Assessment and Care Plan for admission FRAT details.
+    MOBILITY_NEEDS:
+      title: Mobility Needs
+      button: Mobility Needs
+      body: |-
+        # Description
+        - Include the use of mobility aids, level of assistance required. Describe the history of falls.
+    SKIN_INTEGRITY:
+      title: Skin Integrity
+      button: Skin Integrity
+      body: |-
+        # Description
+        - Complete a Comprehensive Skin Assessment upon admission. Perform Braden Scale Risk Assessment upon admission, post-development of new wound and as required for any decline or change in health status. 
+        - Discuss prevention and management of pressure injuries. Consider Skin tear prevention strategies, wound management plan, continence management, disease pathologies such as diabetes mellitus, peripheral vascular disease.
+    CONTINENCE/ELIMINATION:
+      title: Continence/Elimination
+      button: Continence/Elimination
+      body:  |-
+        # Description
+        - Consider continence levels, aids, invasive devices, aperients, bowel chart
+    NUTRITION/HYDRATION:
+      title: Nutrition/Hydration
+      button: Nutrition/Hydration
+      body:  |-
+        # Description
+        - Consider diet preferences and requirements, food allergies and restrictions, modified texture, fluid restrictions, assistance required, daily weight
+    PAIN_MANAGEMENT:
+      title: Pain Management
+      button: Pain Management
+      body:  |-
+        # Description
+        - Consider chronic pain management, acute pain service care plans, medication management, alternative therapies, home care restrictions. Identify triggers, nature of pain, location.
+    MEDICATION_MANAGEMENT:
+      title: Medication Management
+      button: Medication Management
+      body: |-
+        # Description
+        - Consider assessment of competency for self-management, dose administration aids, acute/chronic pain needs, referrals, GP Medication Authority. Include oral medications, topical lotions, inhalers, eye/ear drops, and transdermal patches
+
+        - GP Medication Authority Supplied? (YES/NO/N/A)
+        - Medication Self-Assessment form completed? (YES/NO/N/A)                 
+    RESPIRATORY_MANAGEMENT:
+      title: Respiratory Management
+      button: Respiratory Management
+      body: |-
+        # Description
+        - Consider home oxygen requirements, chronic lung disease, acid/base disturbances, physiotherapy, inhalers, medications, non-invasive ventilation therapies (CPAP)
+    CARDIOVASCULAR_MANAGEMENT:
+      title: Cardiovascular Management
+      button: Cardiovascular Management
+      body: |-
+        # Description
+        TODO Misty will give description
+    MENTAL_HEALTH_MANAGEMENT:
+      title: Mental Health Management
+      button: Mental Health Management
+      body: |-
+        # Description
+        - Consider known diagnoses, any change in cognitive or emotional state, perform Geriatric Depression Score (GDS) as necessary. Complete a Behaviour Support Plan as required
+    RISKS:
+      title: Outline Any Potential Risks To Client
+      button: Outline Any Potential Risks To Client
+      body: |-
+       - Falls Risk
+       Interventions
+       - Isolation
+       Interventions
+       - Medication Errors
+       Interventions
+       - Dyscopia due to lack of self-care and confusion
+       Interventions
+       - Lives Alone / Social Isolation
+       Interventions
+goals:
+  templates:
+    goal1:
+      title: 'Goal #1'
+      button: 'Goal #1'
+      body: ...How can we work together to improve what is most important to
+        you?  When would you like to achieve this by?
+    goal2:
+      title: "Goal #2"
+      button: "Goal #2"
+      body: ...How can we work together to improve what is most second most important
+        to you? When would you like to achieve this by?
+    goal3:
+      title: "Goal #3"
+      button: "Goal #3"
+      body: ...How can we work together to improve what is most third most important
+        to you? When would you like to achieve this by?
+    goal_other:
+      title: 'Name of goal'
+      button: 'Other goal...'
+      body: |-
+        _(NB: Add a new template entry for each other goal)_
+
+        ...How can we work together to improve what is important to you? When would you like to achieve this by?
+how_to_support_me:
+  templates:
+    Plan Overview:
+      title: Plan Overview
+      button: Plan Overview
+      body: 
+      # TODO Update
+advanced_care_planning:
+  templates:
+    Referrals:
+      title: Referrals
+      button: Referrals
+      body: |-
+        # Continence clinic 
+        - Contact Details
+
+        # Speech pathology  
+        - Contact Details
+
+        # Physiotherapist  
+        - Contact Details
+
+        # Occupational Therapist     
+        - Contact Details
+
+        # Dental     
+        - Contact Details
+
+        # Geriatrician     
+        - Contact Details
+
+        # GP
+        - Contact Details
+
+people_who_support_me:
+  templates:
+    key_support_people:
+      title: Key support people
+      button: Key support people
+      body: |-
+        # Name of person #1
+        - ...What is your relationship with them? (e.g., Son, daughter, neighbor, friend)
+        - ...What role do they play in day-to-day support?
+        
+        # Name of person #2
+        - ...What is your relationship with them? (e.g., Son, daughter, neighbor, friend)
+        - ...What role do they play in day-to-day support?
+        
+        # Name of person #3
+        - ...What is your relationship with them? (e.g., Son, daughter, neighbor, friend)
+        - ...What role do they play in day-to-day support?
+        
+        # Doctor (GP)
+        - ...Who is your doctor?
+        - ...Do you see them regularly?
+        - ...What is the name and address of the clinic?
+        - ...What is their phone number?
+        - ...What is their email address?
+        - ...Are you happy for us to liaise with them if required (e.g., for health reasons?)
+        
+        # NDIS Support Coordinator
+        - ...Who is your NDIS Support Coordinator?
+        - ...What is their phone number?
+        - ...What is their email address?
+        - ...Are you happy for us to liaise with them if required (e.g., for health reasons?)
+    decision_makers:
+      title: Decision makers
+      button: Decision makers
+      body: |-
+        _(NB: This section may be sensitive and may be discussed with the authorised representative)_
+
+        # Overview
+        - **Who makes decisions:**...Do you make all of your own decisions or do you have anyone else help you?
+        - ...Can we be provided any formal decision making documents (if indicated, e.g. proof of EPOA)?
+        - ...What type of decisions does the Member make? (e.g. Day-to-day aspects of service, budgets, incidents)
+
+        # EPOA/POA/Guardian #1
+        - **Name:** ...
+        - **Phone number:** ...
+        - **Email:** ...
+        - **Relationships:** ...What is your relationship with them?
+        - ...What type of decisions do they make? (E.g. Day-to-day aspects of service, budgets, incidents)
+
+        # EPOA/POA/Guardian #2
+        - **Name:** ...
+        - **Phone number:** ...
+        - **Email:** ...
+        - **Relationships:** ...What is your relationship with them?
+        - ...What type of decisions do they make? (E.g. Day-to-day aspects of service, budgets, incidents)
+equipment_and_devices:
+  templates:
+    ppe:
+      title: Personal protective equipment
+      button: Personal protective equipment
+      body: |-
+        # Masks
+        - ...I require you to wear masks when...
+        - ...You can find extra masks in...
+
+        # Gloves
+        - ...I require you to wear gloves when...
+        - ...You can find extra gloves in...
+
+        # Aprons
+        - ...I require you to wear aprons when...
+    wearables:
+      title: Pendants & wearables
+      button: Pendants & wearables
+      body: |-
+        # Alarm pendants
+        - ...I like to wear this pendant when...
+        - ...When I'm not wearing it I like to keep it...
+        - **Instructions:** ...Special instructions are...
+        - **Servicing & maintenance:** ...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+
+        # Fall pendants
+        - ...I wear this pendant... or I keep this pendant...
+        - ...When I'm not wearing it I like to keep it...
+        - **Instructions:**...Special instructions are...
+        - **Servicing & maintenance:** ...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+
+        # Orthotics
+        - ...I wear these orthotics when ...
+        - ...When I'm not wearing it I like to keep it...
+        - **Instructions:** ...Special instructions from my podiatrist...
+    consumables:
+      title: Consumables
+      button: Consumables
+      body: |-
+        # Incontinence aids
+        - ...I keep these in...
+        - ...I like to order new aids when...
+        - ...The brand I like is...
+
+        # Hygiene wipes
+        - ...I keep these in...
+        - ...I like to order new aids when...
+        - ...The brand I like is...
+    bedroom:
+      title: Bedroom
+      button: Bedroom and Clocks
+      body: |-
+        # Electric beds
+        - **Instructions:** ...Special instructions are...
+        - **Servicing & maintenance:** ...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+
+        # Wedges and pillows
+        - **Instructions:** ...Special instructions are...
+        - ...I like this to be kept...
+
+        # Dementia clocks
+        - ...I like this to be kept...
+
+        # Digital calendar clocks
+        - **Instructions:** ...Special instructions are...
+        - ...I like this to be kept...
+
+        # Tablet timer products (tablet reminders)
+        - **Instructions:** ...Special instructions are...
+        - ...I like this to be kept...
+    mobility_aids:
+      title: Mobility aids
+      button: Mobility aids
+      body: |-
+        # Walking stick
+        - ...When do I use it?
+        - ...Where do I like to keep it?
+        - **Instructions:** ...Any special instructions?
+
+        # Lightweight seat walker
+        - ...When do I use it?
+        - ...Where do I like to keep it?
+        - **Servicing & maintenance:**...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+        - **Instructions:** ...Any special instructions?
+
+        # Folding walker
+        - ...When do I use it?
+        - ...Where do I like to keep it?
+        - **Servicing & maintenance:** ...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+        - **Instructions:** ...Any special instructions?
+
+        # Folding/manual wheelchair
+        - ...When do I use it?
+        - ...Where do I like to keep it?
+        - **Servicing & maintenance:**...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+        - **Instructions:** ...Any special instructions?
+
+        # Electric/power wheelchair
+        - ...When do I use it?
+        - ...Where do I like to keep it?
+        - **Servicing & maintenance:**...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+        - **Instructions:** ...Any special instructions?
+
+        # Electric scooter
+        - ...When do I use it?
+        - ...Where do I like to keep it?
+        - **Servicing & maintenance:**...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+        - **Instructions:** ...Any special instructions?
+    toilet_aids:
+      title: Toileting aids
+      button: Toileting aids
+      body: |-
+        # Shower stools
+        - **Instructions:** ...Any special instructions?
+        - **Servicing & maintenance:**...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+
+        # Commodes
+        - **Instructions:** ...Any special instructions?
+        - **Servicing & maintenance:**...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+
+        # Over toilet aids
+        - **Instructions:** ...Any special instructions?
+        - **Servicing & maintenance:**...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+    home_modifications:
+      title: Home modifications
+      button: Home modifications
+      body: |-
+        # Removable ramp
+        - ...It is installed at...
+        - **Servicing & maintenance:** ...Who undertakes servicing or maintenance to ensure it is safe and in working order?
+    equipment:
+      title: Name of device/equipment/aid
+      button: Other devices/equipment/aids...
+      body: |-
+        _(NB: Add a new template entry for each device or piece of equipment)_
+
+        # Description
+        ...What is the piece of equipment?
+
+        # How is it used?
+        - ...How do you use it... how can we assist you with it?
+        - ...Where can we find it?
+
+        # Instructions for this item (If applicable)
+        - ...How can we support you to use it?
+
+        # Maintenance requirements (If applicable)
+        - ...Who undertakes servicing or maintenance to ensure it is safe and in working order?
