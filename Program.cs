@@ -19,7 +19,7 @@ namespace ExcelDataTransfer
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Set to NonCommercial if appropriate
 
-            string spreadsheetAPath = "../Downloads/BlueCrossRosterFile.xlsx";
+            string spreadsheetAPath = "../Downloads/BlueCrossRosterFile6WeePreProd.xlsx";
 
             // Load Spreadsheet A
             using (var packageA = new ExcelPackage(new FileInfo(spreadsheetAPath)))
@@ -41,9 +41,10 @@ namespace ExcelDataTransfer
                     int funderColumnID = GetColumnNumberByHeaderName(BlueCrossRoster, "Funding Body");
                     string funder = GetFunder(BlueCrossRoster.Cells[rowA, funderColumnID].Value?.ToString());
 
-                    if (funder == "unknown") {
-                    Console.WriteLine("unknown funder");
-                    continue;
+                    if (funder == "unknown")
+                    {
+                        Console.WriteLine("unknown funder");
+                        continue;
                     }
 
                     // Get Member Name from Blue Cross Roster
@@ -60,7 +61,7 @@ namespace ExcelDataTransfer
                     string workerID;
 
                     //Get rates and membership sheets for member's funder
-                    var membershipSheet = packageA.Workbook.Worksheets.FirstOrDefault(sheet => sheet.Name == ("3 - Memberships - " + funder.ToUpper())); ;
+                    var membershipSheet = packageA.Workbook.Worksheets.FirstOrDefault(sheet => sheet.Name == ("3 - Memberships - " + funder)); ;
                     var ratesSheet = packageA.Workbook.Worksheets.FirstOrDefault(sheet => sheet.Name == funder);
 
                     int membershipColumnID = GetColumnNumberByHeaderName(membershipSheet, "membership_id");
@@ -108,8 +109,9 @@ namespace ExcelDataTransfer
                             // Successfully parsed the numeric frequency, returning it as an integer
                         }
                     }
-                    else {
-                        Console.WriteLine("cannot match regex");
+                    else
+                    {
+                        Console.WriteLine("cannot match regex: " + desc);
                         continue;
                     }
 
@@ -123,16 +125,27 @@ namespace ExcelDataTransfer
                         .FirstOrDefault(i => string.Equals(workerName, workersSheet.Cells[i, lookoutWorkerNameColumnID].Value?.ToString(),
                         StringComparison.OrdinalIgnoreCase));
 
-                    if (workerRow != 0)
+                    string lookoutWorkerName = "";
+
+                    if (workerName.Contains("PERM VACANT") || workerName.Contains("LEAVE VACANT"))
+                    {
+                        workerID = "-1";
+                    }
+                    else if (workerRow != 0)
                     {
                         workerID = workersSheet.Cells[workerRow, lookoutHelperID].Value?.ToString();
                     }
-                    else {
-                    Console.WriteLine("cannot match worker");
-                    continue;
+                    else
+                    {
+                        Console.WriteLine("cannot match worker. Name: " + workerName);
+                        continue;
                     }
-                    
-                    string lookoutWorkerName = workersSheet.Cells[workerRow, lookoutWorkerNameColumnID].Value?.ToString();
+                    if (workerID != "-1")
+                    {
+                        lookoutWorkerName = workersSheet.Cells[workerRow, lookoutWorkerNameColumnID].Value?.ToString();
+                    }
+                    else lookoutWorkerName = "Vacant";
+
 
                     // Find matching row in Membership Spreadsheet
                     int membershipRow = Enumerable.Range(2, rowCountA - 1)
@@ -147,13 +160,57 @@ namespace ExcelDataTransfer
 
                     else
                     {
-                        Console.WriteLine("cannot match member name");
+                        Console.WriteLine("cannot match member name. Funding scheme: " + funder + ". +Member Name: " + memberName);
                         continue;
                     }
 
                     //Get day(s) of rosted rule
                     int rosterDaysColumnID = GetColumnNumberByHeaderName(BlueCrossRoster, "Days");
                     string rosteredDays = BlueCrossRoster.Cells[rowA, rosterDaysColumnID].Value?.ToString();
+                    string[] daysArray = rosteredDays.Split(',');
+                    string newDays = "";
+                    bool hasSaturday = false;
+                    bool hasSunday = false;
+
+                    for (int i = 0; i < daysArray.Length; i++)
+                    {
+                        if (daysArray[i] != null && daysArray[i].Equals("Saturday", StringComparison.OrdinalIgnoreCase))
+                        {
+                            // If the value is found, remove it from the original array
+                            string removedValue = daysArray[i];
+                            daysArray[i] = null;
+
+                            hasSaturday = true;
+                        }
+                    }
+                    
+                    
+
+                    for (int i = 0; i < daysArray.Length; i++)
+                    {
+                        if (daysArray[i] != null && daysArray != null && daysArray[i].Equals("Sunday", StringComparison.OrdinalIgnoreCase))
+                        {
+                            // If the value is found, remove it from the original array
+                            string removedValue = daysArray[i];
+                            daysArray[i] = null;
+
+                            hasSunday = true;
+                        }
+                    }
+                    
+
+                    for (int i = 0; i < daysArray.Length; i++)
+                    {
+                        if((i + 1) == daysArray.Length) newDays += daysArray[i];
+                        else newDays += daysArray[i] + ", ";
+                        rosteredDays = newDays;
+                    }
+
+                    if(daysArray.Length == 0)
+                    {
+                        rosteredDays = "";
+                    }
+
 
                     //Get start and end time 
                     int startTimeColumnID = GetColumnNumberByHeaderName(BlueCrossRoster, "Start Time");
@@ -179,133 +236,19 @@ namespace ExcelDataTransfer
                     string lookoutService = ratesSheet.Cells[ratesRow, lookoutServiceColumnID].Value?.ToString();
                     string lookoutRate = ratesSheet.Cells[ratesRow, rateColumnID].Value?.ToString();
 
+                    rate = getRate(funder, membershipSheet, membershipRow, memberName, blueCrossService,
+                    lookoutService, ratesRow, rosteredDays, startTimeParse);
 
-
-                    if (funder == "CHSP")
-                    {
-                        int cocontributionColumnID = GetColumnNumberByHeaderName(membershipSheet, "Contribution");
-                        string cocontribution = membershipSheet.Cells[ratesRow, cocontributionColumnID].Value?.ToString();
-                        if (cocontribution == "") {
-                        Console.WriteLine("CHSP No contribution record");
-                        continue;
-                        }
-
-                        if (cocontribution == "part")
-                        {
-                            if (blueCrossService == "Personal Care")
-                            {
-                                rate = "CHSP - Personal Care (Co-Contribution-Part Pensioner or Self-Funded)";
-                            }
-                            else if (blueCrossService == "Home Care")
-                            {
-                                rate = "CHSP - Homecare (Co-Contribution-Part Pensioner or Self-Funded)";
-                            }
-                            else if (blueCrossService == "Respite")
-                            {
-                                rate = "CHSP - Respite (Co-Contribution-Part Pensioner or Self-Funded)";
-                            }
-                        }
-                        else if (cocontribution == "full")
-                        {
-                            if (blueCrossService == "Personal Care")
-                            {
-                                rate = "CHSP - Personal Care (Co-Contribution-Full Pensioner)";
-                            }
-                            else if (blueCrossService == "Home Care")
-                            {
-                                rate = "CHSP - Homecare (Co-Contribution-Full Pensioner)";
-                            }
-                            else if (blueCrossService == "Respite")
-                            {
-                                rate = "CHSP - Respite (Co-Contribution-Full Pensioner)";
-                            }
-                        }
-                    }
-
-                    if (funder == "HCP" || funder == "Private")
-                    {
-                        if (ratesRow == 0) {
-                        Console.WriteLine("cannot match rates");    
-                        continue;
-                        }
-
-                        switch (rosteredDays)
-                        {
-                            case "Saturday" when startTimeParse > new TimeSpan(20, 0, 0): // 20:00 or 8pm
-                                rate = "Personal Care - Night Shift - Saturday";
-                                break;
-
-                            case "Sunday" when startTimeParse > new TimeSpan(20, 0, 0): // 20:00 or 8pm
-                                rate = "Personal Care - Night Shift - Sunday";
-                                break;
-
-                            case "Saturday":
-                                rate = "Personal Care - Saturday";
-                                break;
-
-                            case "Sunday":
-                                rate = "Personal Care - Sunday";
-                                break;
-
-                            case var _ when startTimeParse > new TimeSpan(20, 0, 0): // 20:00 or 8pm
-                                rate = "Personal Care - Night Shift - Weekday";
-                                break;
-
-                            default:
-                                rate = "Personal Care / Home Care - Weekday";
-                                break;
-                        }
-                    }
-                    if (funder == "DVA")
-                    {
-                        if (blueCrossService == "Personal Care")
-                        {
-                            rate = "DVA - Personal care";
-                        }
-
-                        else if (blueCrossService.Contains("Sleepover") && blueCrossService.Contains("active"))
-                        {
-                            rate = "DVA - Overnight personal care active";
-                        }
-                        else if (blueCrossService.Contains("Sleepover") && blueCrossService.Contains("inactive"))
-                        {
-                            rate = "DVA - Overnight personal care inactive";
-                        }
-                        else {
-                            Console.WriteLine("cannot match DVA rate");
-                            continue;
-                        }
-                    }
-
-                    if (funder == "VHC")
-                    {
-                        if (blueCrossService == "Personal Care")
-                        {
-                            rate = "VHC - Personal Care";
-                        }
-
-                        else if (blueCrossService == "Home Care")
-                        {
-                            rate = "VHC - Domestic Assistance";
-                        }
-                        else if (blueCrossService == "Respite")
-                        {
-                            rate = "VHC - In-Home Respite";
-                        }
-                            else {
-                            Console.WriteLine("cannot match VHC rate");
-                            continue;
-                        }
-                    }
 
                     if (rate == "") continue;
+
+                    if(daysArray.Length > 0 && rosteredDays != "") {
 
                     LookoutRoster.Cells[lookoutRosterCount, 3].Value = membershipID;
                     LookoutRoster.Cells[lookoutRosterCount, 4].Value = profileID;
                     LookoutRoster.Cells[lookoutRosterCount, 5].Value = memberName;
                     LookoutRoster.Cells[lookoutRosterCount, 6].Value = workerID;
                     LookoutRoster.Cells[lookoutRosterCount, 7].Value = lookoutWorkerName;
-                    LookoutRoster.Cells[lookoutRosterCount, 8].Value = "No";
                     LookoutRoster.Cells[lookoutRosterCount, 11].Value = "FALSE";
                     LookoutRoster.Cells[lookoutRosterCount, 12].Value = startDate;
                     LookoutRoster.Cells[lookoutRosterCount, 13].Value = endDate;
@@ -316,23 +259,312 @@ namespace ExcelDataTransfer
                     LookoutRoster.Cells[lookoutRosterCount, 18].Value = lookoutService;
                     LookoutRoster.Cells[lookoutRosterCount, 19].Value = rate;
 
+                    if (funder == "HCP" && (lookoutService == "Companion Care" || lookoutService == "Domestic Assistance (Home Care)" ||
+                    lookoutService == "Personal Care" || lookoutService == "Shopping - escorted" || lookoutService == "Transport"))
+                    {
+                        LookoutRoster.Cells[lookoutRosterCount, 8].Value = "Yes";
+                        LookoutRoster.Cells[lookoutRosterCount, 9].Value = "HCP Travel per KM";
+                    }
+                    else
+                    {
+                        LookoutRoster.Cells[lookoutRosterCount, 8].Value = "No";
+                    }
+
                     lookoutRosterCount++;
+                    }
+
+                    //Do Saturday
+                    if(hasSaturday)
+                    {
+                        rate = getRate(funder, membershipSheet, membershipRow, memberName, blueCrossService,
+                    lookoutService, ratesRow, "Saturday", startTimeParse);
+                    
+
+                    if (rate == "") continue;
+
+                    LookoutRoster.Cells[lookoutRosterCount, 3].Value = membershipID;
+                    LookoutRoster.Cells[lookoutRosterCount, 4].Value = profileID;
+                    LookoutRoster.Cells[lookoutRosterCount, 5].Value = memberName;
+                    LookoutRoster.Cells[lookoutRosterCount, 6].Value = workerID;
+                    LookoutRoster.Cells[lookoutRosterCount, 7].Value = lookoutWorkerName;
+                    LookoutRoster.Cells[lookoutRosterCount, 11].Value = "FALSE";
+                    LookoutRoster.Cells[lookoutRosterCount, 12].Value = startDate;
+                    LookoutRoster.Cells[lookoutRosterCount, 13].Value = endDate;
+                    LookoutRoster.Cells[lookoutRosterCount, 14].Value = "Saturday";
+                    LookoutRoster.Cells[lookoutRosterCount, 15].Value = frequency;
+                    LookoutRoster.Cells[lookoutRosterCount, 16].Value = startTime;
+                    LookoutRoster.Cells[lookoutRosterCount, 17].Value = endTime;
+                    LookoutRoster.Cells[lookoutRosterCount, 18].Value = lookoutService;
+                    LookoutRoster.Cells[lookoutRosterCount, 19].Value = rate;
+
+                    if (funder == "HCP" && (lookoutService == "Companion Care" || lookoutService == "Domestic Assistance (Home Care)" ||
+                    lookoutService == "Personal Care" || lookoutService == "Shopping - escorted" || lookoutService == "Transport"))
+                    {
+                        LookoutRoster.Cells[lookoutRosterCount, 8].Value = "Yes";
+                        LookoutRoster.Cells[lookoutRosterCount, 9].Value = "HCP Travel per KM";
+                    }
+                    else
+                    {
+                        LookoutRoster.Cells[lookoutRosterCount, 8].Value = "No";
+                    }
+
+                    lookoutRosterCount++;
+                    }
+
+                    //Do Sunday
+                    if(hasSunday)
+                    {
+                        rate = getRate(funder, membershipSheet, membershipRow, memberName, blueCrossService,
+                    lookoutService, ratesRow, "Sunday", startTimeParse);
+                    
+
+                    if (rate == "") continue;
+
+                    LookoutRoster.Cells[lookoutRosterCount, 3].Value = membershipID;
+                    LookoutRoster.Cells[lookoutRosterCount, 4].Value = profileID;
+                    LookoutRoster.Cells[lookoutRosterCount, 5].Value = memberName;
+                    LookoutRoster.Cells[lookoutRosterCount, 6].Value = workerID;
+                    LookoutRoster.Cells[lookoutRosterCount, 7].Value = lookoutWorkerName;
+                    LookoutRoster.Cells[lookoutRosterCount, 11].Value = "FALSE";
+                    LookoutRoster.Cells[lookoutRosterCount, 12].Value = startDate;
+                    LookoutRoster.Cells[lookoutRosterCount, 13].Value = endDate;
+                    LookoutRoster.Cells[lookoutRosterCount, 14].Value = "Sunday";
+                    LookoutRoster.Cells[lookoutRosterCount, 15].Value = frequency;
+                    LookoutRoster.Cells[lookoutRosterCount, 16].Value = startTime;
+                    LookoutRoster.Cells[lookoutRosterCount, 17].Value = endTime;
+                    LookoutRoster.Cells[lookoutRosterCount, 18].Value = lookoutService;
+                    LookoutRoster.Cells[lookoutRosterCount, 19].Value = rate;
+
+                    if (funder == "HCP" && (lookoutService == "Companion Care" || lookoutService == "Domestic Assistance (Home Care)" ||
+                    lookoutService == "Personal Care" || lookoutService == "Shopping - escorted" || lookoutService == "Transport"))
+                    {
+                        LookoutRoster.Cells[lookoutRosterCount, 8].Value = "Yes";
+                        LookoutRoster.Cells[lookoutRosterCount, 9].Value = "HCP Travel per KM";
+                    }
+                    else
+                    {
+                        LookoutRoster.Cells[lookoutRosterCount, 8].Value = "No";
+                    }
+
+                    lookoutRosterCount++;
+                    }
 
                 }
 
-            packageA.Save();    
+                packageA.Save();
             }
             Console.WriteLine("Data copied successfully.");
-            // Save the changes to Spreadsheet B
+
+            static string getRate(string funder, ExcelWorksheet membershipSheet, int membershipRow, string memberName, string blueCrossService,
+            string lookoutService, int ratesRow, string rosteredDays, TimeSpan startTimeParse)
+            {
+                if (funder == "CHSP")
+                {
+                    int cocontributionColumnID = GetColumnNumberByHeaderName(membershipSheet, "Contribution");
+                    string cocontribution = membershipSheet.Cells[membershipRow, cocontributionColumnID].Value?.ToString();
+                    if (cocontribution == "" || cocontribution == null)
+                    {
+                        Console.WriteLine("CHSP No contribution record for: " + memberName);
+                        return "";
+                    }
+
+                    if (cocontribution == "part")
+                    {
+                        if (blueCrossService == "Personal Care")
+                        {
+                            return "CHSP - Personal Care (Co-Contribution-Part Pensioner or Self-Funded)";
+                        }
+                        else if (blueCrossService == "Home Care")
+                        {
+                            return "CHSP - Homecare (Co-Contribution-Part Pensioner or Self-Funded)";
+                        }
+                        else if (blueCrossService == "Respite")
+                        {
+                            return "CHSP - Respite (Co-Contribution-Part Pensioner or Self-Funded)";
+                        }
+                    }
+                    else if (cocontribution == "full")
+                    {
+                        if (blueCrossService == "Personal Care")
+                        {
+                            return "CHSP - Personal Care (Co-Contribution-Full Pensioner)";
+                        }
+                        else if (blueCrossService == "Home Care")
+                        {
+                            return "CHSP - Homecare (Co-Contribution-Full Pensioner)";
+                        }
+                        else if (blueCrossService == "Respite")
+                        {
+                            return "CHSP - Respite (Co-Contribution-Full Pensioner)";
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Couldn't match service: " + blueCrossService);
+                    }
+                }
+
+                if (funder == "HCP")
+                {
+                    if (ratesRow == 0)
+                    {
+                        Console.WriteLine("cannot match rates");
+                        return "";
+                    }
+
+                    if (lookoutService == "Registered Nurse")
+                    {
+                        switch (rosteredDays)
+                        {
+                            case "Saturday":
+                                return "Registered Nurse - Saturday";
+                                break;
+                            case "Sunday":
+                                return "Registered Nurse - Sunday";
+                                break;
+                            default:
+                                return "Registered Nurse - Weekday";
+                                break;
+                        }
+                    }
+                    else if (lookoutService == "Personal Care" || lookoutService == "Domestic Assistance (Home Care)" ||
+                    lookoutService == "Respite" || lookoutService == "Transport")
+                    {
+                        switch (rosteredDays)
+                        {
+                            case "Saturday" when startTimeParse > new TimeSpan(20, 0, 0): // 20:00 or 8pm
+                                return "Personal Care - Night Shift - Saturday";
+                                break;
+
+                            case "Sunday" when startTimeParse > new TimeSpan(20, 0, 0): // 20:00 or 8pm
+                                return "Personal Care - Night Shift - Sunday";
+                                break;
+
+                            case "Saturday":
+                                return "Personal Care - Saturday";
+                                break;
+
+                            case "Sunday":
+                                return "Personal Care - Sunday";
+                                break;
+
+                            case var _ when startTimeParse > new TimeSpan(20, 0, 0): // 20:00 or 8pm
+                                return "Personal Care - Night Shift - Weekday";
+                                break;
+
+                            default:
+                                return "Personal Care / Home Care - Weekday";
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("HCP rate Unassigned");
+                        return "";
+                    }
+                }
+                if (funder == "Private")
+                {
+                    if (ratesRow == 0)
+                    {
+                        Console.WriteLine("cannot match rates");
+                        return "";
+                    }
+
+                    if (lookoutService == "Personal Care" || lookoutService == "Domestic Assistance (Home Care)" ||
+                    lookoutService == "Companion Care" || lookoutService == "Transport")
+                    {
+                        switch (rosteredDays)
+                        {
+                            case "Saturday" when startTimeParse > new TimeSpan(20, 0, 0): // 20:00 or 8pm
+                                return "Personal Care - Night Shift - Saturday";
+                                break;
+
+                            case "Sunday" when startTimeParse > new TimeSpan(20, 0, 0): // 20:00 or 8pm
+                                return "Personal Care - Night Shift - Sunday";
+                                break;
+
+                            case "Saturday":
+                                return "Personal Care - Saturday";
+                                break;
+
+                            case "Sunday":
+                                return "Personal Care - Sunday";
+                                break;
+
+                            case var _ when startTimeParse > new TimeSpan(20, 0, 0): // 20:00 or 8pm
+                                return "Personal Care - Night Shift - Weekday";
+                                break;
+
+                            default:
+                                return "Personal Care / Home Care - Weekday";
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Private rate Unassigned");
+                        return "";
+                    }
+                }
+                if (funder == "DVA")
+                {
+                    if (blueCrossService == "Personal Care")
+                    {
+                        return "DVA - Personal care";
+                    }
+                    else if (lookoutService.Contains("Sleepover") && lookoutService.Contains("active"))
+                    {
+                        return "DVA - Overnight personal care active";
+                    }
+                    else if (lookoutService.Contains("Sleepover") && lookoutService.Contains("inactive"))
+                    {
+                        return "DVA - Overnight personal care inactive";
+                    }
+                    else if (lookoutService == "Registered Nurse")
+                    {
+                        return "DVA - Clinical care";
+                    }
+                    else
+                    {
+                        Console.WriteLine("cannot match DVA rate");
+                        return "";
+                    }
+                }
+
+                if (funder == "VHC")
+                {
+                    if (blueCrossService == "Personal Care")
+                    {
+                        return "VHC - Personal Care";
+                    }
+
+                    else if (blueCrossService == "Home Care")
+                    {
+                        return "VHC - Domestic Assistance";
+                    }
+                    else if (blueCrossService == "Respite")
+                    {
+                        return "VHC - In-Home Respite";
+                    }
+                    else
+                    {
+                        Console.WriteLine("cannot match VHC rate");
+                        return "";
+                    }
+                }
+                return "";
+            }
 
             static string GetReorderedName(string input)
             {
                 string[] nameParts = input.Split(new[] { ", " }, StringSplitOptions.None);
                 if (nameParts.Length == 2)
                 {
-                    string lastName = nameParts[0];
-                    string firstName = nameParts[1];
-                    return $"{firstName} {lastName}";
+                    string lastName = nameParts[0].Trim();
+                    string firstName = nameParts[1].Trim();
+                    string fullName = firstName + " " + lastName;
+                    return fullName.Replace("  ", " ");
                 }
                 else
                 {
